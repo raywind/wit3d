@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Experimental.Networking;
 using System.Collections;
 using SimpleJSON;
 
@@ -11,7 +12,7 @@ public class SampleConnectToServer : MonoBehaviour {
 
 	// API access parameters
 	string url;
-	WWW www;
+	UnityWebRequest wr;
 
 	// GameObjects to hold the results of the Wit sentence
 	GameObject subject;
@@ -38,27 +39,29 @@ public class SampleConnectToServer : MonoBehaviour {
 			//Grab the most up-to-date JSON file
 			url = "http://localhost:3000/json/witresponse.json";
 			//Create a WWW variable to store the WWW request to that URL
-			www = new WWW(url);
 
 			//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
-			StartCoroutine(WaitForRequest(www));
+			StartCoroutine(GetJSONText());
 		}
 
 
 	}
 
-	//Coroutine WaitForRequest
-	IEnumerator WaitForRequest(WWW www)
-	{
+	IEnumerator GetJSONText() {
 
-		yield return www;
-		// check for errors
-		if (www.error == null) {
-			Debug.Log ("WWW Ok!: " + www.text);
-			//start the "DoParse" function.
-			DoParse(www.text);
-		} else {
-			Debug.Log ("WWW Error: " + www.error);
+		wr = UnityWebRequest.Get(url);
+		yield return wr.Send ();
+
+		if(wr.isError) {
+			Debug.Log(wr.error);
+		}
+		else {
+			// Show results as text
+			Debug.Log(wr.downloadHandler.text);
+			DoParse (wr.downloadHandler.text);
+
+			// Or retrieve results as binary data
+			// byte[] results = wr.downloadHandler.data;
 		}
 	}
 
