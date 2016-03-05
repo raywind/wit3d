@@ -9,10 +9,15 @@ public class SampleConnectToServer : MonoBehaviour {
 
 	// Global Variables
 
+	// API access parameters
+	string url;
+	WWW www;
+
 	// GameObjects to hold the results of the Wit sentence
 	GameObject subject;
 	GameObject destination;
 	public float yOffset;
+
 
 	// Use this for initialization
 	void Start () {
@@ -22,12 +27,20 @@ public class SampleConnectToServer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//Create a string variable to store the URL
-		string url = "http://localhost:3000/json/witresponse.json";
-		//Create a WWW variable to store the WWW request to that URL
-		WWW www = new WWW(url);
-		//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
-		StartCoroutine(WaitForRequest(www));
+		if (Input.GetKeyDown("space")) {
+
+			// Debug
+			print("space key was pressed");
+
+			//Grab the most up-to-date JSON file
+			url = "http://localhost:3000/json/witresponse.json";
+			//Create a WWW variable to store the WWW request to that URL
+			www = new WWW(url);
+
+			//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
+			StartCoroutine(WaitForRequest(www));
+		}
+
 
 	}
 
