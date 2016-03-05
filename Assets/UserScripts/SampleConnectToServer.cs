@@ -16,7 +16,7 @@ public class SampleConnectToServer : MonoBehaviour {
 	void Update () {
 
 		//Create a string variable to store the URL
-		string url = "http://localhost:3000/json/dynamicsizedb.json";
+		string url = "http://localhost:3000/json/witresponse.json";
 		//Create a WWW variable to store the WWW request to that URL
 		WWW www = new WWW(url);
 		//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
@@ -45,11 +45,14 @@ public class SampleConnectToServer : MonoBehaviour {
 		var N = JSON.Parse (textToParse);
 		print ("SimpleJSON: " + N.ToString());
 
-		string cityName = N[0][1]["name"].Value;
-		print ("City: " + cityName);
+		string subjName = N["subject"].Value;
+		print ("Subject: " + subjName);
 
-		float popNum = N [0][1] ["size"].AsFloat;
-		print ("Population: " + popNum);
+		string destName = N["destination"].Value;
+		print ("Destination: " + destName);
+
+		string originName = N["origin"].Value;
+		print ("Origin: " + originName);
 
 		// Change the size of the cylinder to equal population size
 		// ChangeSize (popNum);
