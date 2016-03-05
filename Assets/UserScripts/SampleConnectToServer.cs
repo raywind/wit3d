@@ -12,6 +12,7 @@ public class SampleConnectToServer : MonoBehaviour {
 	// GameObjects to hold the results of the Wit sentence
 	GameObject subject;
 	GameObject destination;
+	public float yOffset;
 
 	// Use this for initialization
 	void Start () {
@@ -63,9 +64,6 @@ public class SampleConnectToServer : MonoBehaviour {
 		// Find the objects that were specified
 		FindObjects (subjJson, destJson);
 
-		// Move the subject 
-		// MoveSubject();
-
 	}
 		
 	void FindObjects(string subjName, string destName) {
@@ -76,8 +74,21 @@ public class SampleConnectToServer : MonoBehaviour {
 		subject = GameObject.Find (subjName);
 		destination = GameObject.Find (destName);
 
-		string subjectLoc = subject.transform.localPosition.ToString();
+		Vector3 subjectLoc = subject.transform.localPosition;
+		string subjectLocDebug = subject.transform.localPosition.ToString();
 		print ("SubjectLoc: " + subjectLoc);
+
+		Vector3 destLoc = destination.transform.localPosition;
+		string destLocDebug = destination.transform.localPosition.ToString();
+
+		// Now move the object
+		MoveObject ();
+
+	}
+
+	void MoveObject () {
+
+		subject.transform.position = destination.transform.position + new Vector3(0.0f, yOffset, 0.0f);
 
 	}
 
