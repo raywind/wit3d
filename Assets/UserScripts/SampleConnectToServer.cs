@@ -16,7 +16,10 @@ public class SampleConnectToServer : MonoBehaviour {
 	// GameObjects to hold the results of the Wit sentence
 	GameObject subject;
 	GameObject destination;
+
+	// Public movement paramaters
 	public float yOffset;
+	public float moveTime;
 
 
 	// Use this for initialization
@@ -91,11 +94,12 @@ public class SampleConnectToServer : MonoBehaviour {
 		string subjectLocDebug = subject.transform.localPosition.ToString();
 		print ("SubjectLoc: " + subjectLoc);
 
-		Vector3 destLoc = destination.transform.localPosition;
+		Vector3 destLoc = destination.transform.localPosition + new Vector3 (0.0f, yOffset, 0.0f);
 		string destLocDebug = destination.transform.localPosition.ToString();
 
 		// Now move the object
-		MoveObject ();
+		// MoveObject ();
+		StartCoroutine(MoveToPosition(destLoc, moveTime));
 
 	}
 
@@ -103,6 +107,23 @@ public class SampleConnectToServer : MonoBehaviour {
 
 		subject.transform.position = destination.transform.position + new Vector3(0.0f, yOffset, 0.0f);
 
+		// subject.transform.position = Vector3.Lerp (subjectOriginalPosition, destination.transform.position, speed);
+
+
 	}
+
+	IEnumerator MoveToPosition(Vector3 newPosition, float time)
+	{
+		float elapsedTime = 0;
+		Vector3 startingPos = subject.transform.position;
+		while (elapsedTime < time)
+		{
+			print ("moving!");
+			subject.transform.position = Vector3.Lerp(startingPos, newPosition, (elapsedTime / time));
+			elapsedTime += Time.deltaTime;
+			yield return null;
+		}
+	}
+
 
 }
