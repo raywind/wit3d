@@ -7,6 +7,12 @@ using SimpleJSON;
 
 public class SampleConnectToServer : MonoBehaviour {
 
+	// Global Variables
+
+	// GameObjects to hold the results of the Wit sentence
+	GameObject subject;
+	GameObject destination;
+
 	// Use this for initialization
 	void Start () {
 
@@ -45,24 +51,33 @@ public class SampleConnectToServer : MonoBehaviour {
 		var N = JSON.Parse (textToParse);
 		print ("SimpleJSON: " + N.ToString());
 
-		string subjName = N["subject"].Value;
-		print ("Subject: " + subjName);
+		string subjJson = N["subject"].Value;
+		print ("Subject: " + subjJson);
 
-		string destName = N["destination"].Value;
-		print ("Destination: " + destName);
+		string destJson = N["destination"].Value;
+		print ("Destination: " + destJson);
 
-		string originName = N["origin"].Value;
-		print ("Origin: " + originName);
+		string originJson = N["origin"].Value;
+		print ("Origin: " + originJson);
 
-		// Change the size of the cylinder to equal population size
-		// ChangeSize (popNum);
+		// Find the objects that were specified
+		FindObjects (subjJson, destJson);
+
+		// Move the subject 
+		// MoveSubject();
 
 	}
+		
+	void FindObjects(string subjName, string destName) {
 
-	void ChangeSize(float populationSize) {
+		print ("FindObjects subject: " + subjName);
+		print ("FindObjects destination: " + destName);
 
-		print ("Got it! " + populationSize);
-		transform.localScale = new Vector3 (1.0F, populationSize, 1.0F);
+		subject = GameObject.Find (subjName);
+		destination = GameObject.Find (destName);
+
+		string subjectLoc = subject.transform.localPosition.ToString();
+		print ("SubjectLoc: " + subjectLoc);
 
 	}
 
