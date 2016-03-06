@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\JSON Tests\CSharp\Test_CSharp.cs" />
+     <Compile Include="Assets\UserScripts\HttpConnectToServer.cs" />
      <Compile Include="Assets\UserScripts\SampleConnectToServer.cs" />
      <Compile Include="Assets\UserScripts\WitConnectToServer.cs" />
      <None Include="Assets\JSON Tests\TroubleShoot.txt" />

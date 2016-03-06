@@ -1,8 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/UserScripts/WitConnectToServer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/UserScripts/HttpConnectToServer.cs">
     <Files>
-      <File FileName="Assets/UserScripts/WitConnectToServer.cs" Line="52" Column="69" />
+      <File FileName="Assets/UserScripts/HttpConnectToServer.cs" Line="18" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

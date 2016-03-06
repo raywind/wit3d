@@ -4,7 +4,7 @@ using System.Collections;
 using SimpleJSON;
 
 
-public class WitConnectToServer : MonoBehaviour {
+public class HttpConnectToServer : MonoBehaviour {
 
 	// Global Variables
 
