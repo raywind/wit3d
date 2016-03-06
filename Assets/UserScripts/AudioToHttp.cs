@@ -44,14 +44,13 @@ public class AudioToHttp : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
-		if (Input.GetKey (KeyCode.P)) {
+		if (Input.GetKeyDown (KeyCode.Space)) {
 			print ("Listening for command");
 			commandClip = Microphone.Start(null, false, 10, samplerate);  //Start recording (rewriting older recordings)
 		}
 
 
-		if (Input.GetKey (KeyCode.O)) {
+		if (Input.GetKeyUp (KeyCode.Space)) {
 
 			// Debug
 			print("Thinking ...");
@@ -149,31 +148,38 @@ public class AudioToHttp : MonoBehaviour {
 
 	void FindObjects(string subjName, string destName) {
 
-		print ("FindObjects subject: " + subjName);
-		print ("FindObjects destination: " + destName);
+		if (subjName == "" || destName == "") {
 
-		subject = GameObject.Find (subjName);
-		destination = GameObject.Find (destName);
+			print ("Didn't understand you, try again.");
 
-		Vector3 subjectLoc = subject.transform.localPosition;
-		string subjectLocDebug = subject.transform.localPosition.ToString();
-		print ("SubjectLoc: " + subjectLoc);
+		} else {
 
-		Vector3 destLoc = destination.transform.localPosition + new Vector3 (0.0f, yOffset, 0.0f);
-		string destLocDebug = destination.transform.localPosition.ToString();
+			print ("FindObjects subject: " + subjName);
+			print ("FindObjects destination: " + destName);
 
-		// Now move the object
-		// MoveObject ();
-		StartCoroutine(MoveToPosition(destLoc, moveTime));
+			if (GameObject.Find (subjName) != null && GameObject.Find (destName) != null) {
 
-	}
+				subject = GameObject.Find (subjName);
+				destination = GameObject.Find (destName);
 
-	void MoveObject () {
+				Vector3 subjectLoc = subject.transform.localPosition;
+				string subjectLocDebug = subject.transform.localPosition.ToString ();
+				print ("SubjectLoc: " + subjectLoc);
 
-		subject.transform.position = destination.transform.position + new Vector3(0.0f, yOffset, 0.0f);
+				Vector3 destLoc = destination.transform.localPosition + new Vector3 (0.0f, yOffset, 0.0f);
+				string destLocDebug = destination.transform.localPosition.ToString ();
 
-		// subject.transform.position = Vector3.Lerp (subjectOriginalPosition, destination.transform.position, speed);
+				// Now move the object
+				// MoveObject ();
+				StartCoroutine (MoveToPosition (destLoc, moveTime));
+			
+			} else {
 
+				print("Either " + subjName + " or " + destName + " is confusing me.");
+
+			}
+
+		}
 
 	}
 
