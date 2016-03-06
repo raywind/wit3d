@@ -2,7 +2,14 @@
 using UnityEngine.Experimental.Networking;
 using System.Collections;
 using SimpleJSON;
-
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+// using System.Web;
 
 public class HttpConnectToServer : MonoBehaviour {
 
@@ -12,15 +19,10 @@ public class HttpConnectToServer : MonoBehaviour {
 	string url;
 	string token;
 	UnityWebRequest wr;
-	UnityWebRequest retrieveAudio;
 
 	// GameObjects to hold the results of the Wit sentence
 	GameObject subject;
 	GameObject destination;
-
-	//Temporary: public request variables
-	public string witMessage;
-	byte[] data;
 
 	// Public movement paramaters
 	public float yOffset;
@@ -30,15 +32,10 @@ public class HttpConnectToServer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		// What's the WIT api token?
-		token = "NJP2HHQXIUK3IGW53WXL65NRD74GGJ5B";
-
 	}
 
 	// Update is called once per frame
 	void Update () {
-
-		// Press 'space' to get the audio file
 
 		if (Input.GetKeyDown("space")) {
 
@@ -46,80 +43,83 @@ public class HttpConnectToServer : MonoBehaviour {
 			print("space key was pressed");
 
 			//Grab the most up-to-date JSON file
-			url = "https://api.wit.ai/speech?v=20141022";
+			url = "https://api.wit.ai/message?v=20160305&q=Put%20the%20box%20on%20the%20shelf";
+			token = "NJP2HHQXIUK3IGW53WXL65NRD74GGJ5B";
 
 			//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
-			//StartCoroutine(GetJSONText());
-			StartCoroutine(GetAudioFile());
+			print(GetJSONText("sample.wav"));
 		}
 
-		// Press 'M' to see if the audio retrieval is done...
-		// if it is, ship it off to Wit
 
-		if (Input.GetKeyDown("m")) {
+	}
 
-			// Debug
-			print("m key was pressed");
+	string GetJSONText(string file) {
 
-			// See if it's done
-			if (retrieveAudio.downloadHandler.isDone) {
-				print ("audio retrieval done");
-				StartCoroutine (GetJSONText ());
-			} else {
-				print ("download not done yet");
+		// get the file w/ FileStream
+		FileStream filestream = new FileStream (file, FileMode.Open, FileAccess.Read);
+		BinaryReader filereader = new BinaryReader (filestream);
+		byte[] BA_AudioFile = filereader.ReadBytes ((Int32)filestream.Length);
+		filestream.Close ();
+		filereader.Close ();
+
+		// create an HttpWebRequest
+		HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.wit.ai/speech");
+
+		request.Method = "POST";
+		request.Headers ["Authorization"] = "Bearer " + token;
+		request.ContentType = "audio/wav";
+		request.ContentLength = BA_AudioFile.Length;
+		request.GetRequestStream ().Write (BA_AudioFile, 0, BA_AudioFile.Length);
+
+//		// Delete the temp file
+//		try
+//		{
+//			File.Delete(file);
+//		}
+//		catch
+//		{
+//			print("Unable to delete the temp file!" + Environment.NewLine + "Please do so yourself: " + file);
+//		}
+
+		// Process the wit.ai response
+		try
+		{
+			HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+			if (response.StatusCode == HttpStatusCode.OK)
+			{
+				print("Http went through ok");
+				StreamReader response_stream = new StreamReader(response.GetResponseStream());
+				return response_stream.ReadToEnd();
 			}
-
+			else
+			{
+				return "Error: " + response.StatusCode.ToString();
+				return "HTTP ERROR";
+			}
 		}
+		catch (Exception ex)
+		{
+			return "Error: " + ex.Message;
+			return "HTTP ERROR";
+		}       
 
+		// string authString = "Bearer " + token;
+		// wr = UnityWebRequest.Get(url);
+		// wr.SetRequestHeader ("Authorization", authString);
+		// yield return wr.Send ();
 
-	}
-
-
-	IEnumerator GetAudioFile() {
-
-		string audioFileLocation = "http://localhost:3000/sample.wav";
-
-		// get the audio file and encode it into byte[] data
-		retrieveAudio = UnityWebRequest.Get (audioFileLocation);
-		yield return retrieveAudio.Send ();
-
-		if (retrieveAudio.isError) {
-			print ("ERRA CAN't get audio");
-		} else {
-			print ("Got eem");
-			// use a download handler here
-			data = retrieveAudio.downloadHandler.data;
-			// string dataString = data.ToString ();
-			// print (dataString);
-		}
-
-	}
-
-	IEnumerator GetJSONText() {
-
-		wr = UnityWebRequest.Post (url,"test");
-
-		// uploadhandler will include this in the body
-		// UploadHandlerRaw upHandler = new UploadHandlerRaw(data);
-
-		string authString = "Bearer " + token;
-		wr.SetRequestHeader ("Authorization", authString);
-
-		wr.SetRequestHeader ("Content-Type", "audio/wav");
-		yield return wr.Send ();
-
-		if(wr.isError) {
-			print(wr.error);
-			print ("ERROR!");
-		}
-		else {
-			// Show results as text
-			print(wr.downloadHandler.text);
-			// DoParse (wr.downloadHandler.text);
-
-			// Or retrieve results as binary data
-			// byte[] results = wr.downloadHandler.data;
-		}
+//		if(wr.isError) {
+//			print(wr.error);
+//			print ("ERROR!");
+//		}
+//		else {
+//			// Show results as text
+//			print(wr.downloadHandler.text);
+//			// DoParse (wr.downloadHandler.text);
+//
+//			// Or retrieve results as binary data
+//			// byte[] results = wr.downloadHandler.data;
+//		}
 	}
 
 	void DoParse(string textToParse){
