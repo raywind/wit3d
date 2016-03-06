@@ -11,9 +11,13 @@ using System.Net;
 using System.Text;
 // using System.Web;
 
-public class HttpConnectToServer : MonoBehaviour {
+public class AudioToHttp : MonoBehaviour {
 
-	// Global Variables
+	// Class Variables
+
+	// Audio variables
+	public AudioClip commandClip;
+	int samplerate;
 
 	// API access parameters
 	string url;
@@ -32,18 +36,35 @@ public class HttpConnectToServer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		// set samplerate to 16000 for wit.ai
+		samplerate = 16000;
+
 	}
 
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetKeyDown("space")) {
+
+		if (Input.GetKey (KeyCode.P)) {
+			print ("Listening for command");
+			commandClip = Microphone.Start(null, false, 10, samplerate);  //Start recording (rewriting older recordings)
+		}
+
+
+		if (Input.GetKey (KeyCode.O)) {
 
 			// Debug
-			print("space key was pressed");
+			print("Thinking ...");
+
+			// Save the audio file
+			Microphone.End(null);
+			SavWav.Save("sample", commandClip);
+
+			// At this point, we can delete the existing audio clip
+			commandClip = null;
 
 			//Grab the most up-to-date JSON file
-			url = "https://api.wit.ai/message?v=20160305&q=Put%20the%20box%20on%20the%20shelf";
+			// url = "https://api.wit.ai/message?v=20160305&q=Put%20the%20box%20on%20the%20shelf";
 			token = "NJP2HHQXIUK3IGW53WXL65NRD74GGJ5B";
 
 			//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
@@ -73,15 +94,15 @@ public class HttpConnectToServer : MonoBehaviour {
 		request.ContentLength = BA_AudioFile.Length;
 		request.GetRequestStream ().Write (BA_AudioFile, 0, BA_AudioFile.Length);
 
-//		// Delete the temp file
-//		try
-//		{
-//			File.Delete(file);
-//		}
-//		catch
-//		{
-//			print("Unable to delete the temp file!" + Environment.NewLine + "Please do so yourself: " + file);
-//		}
+		//		// Delete the temp file
+		//		try
+		//		{
+		//			File.Delete(file);
+		//		}
+		//		catch
+		//		{
+		//			print("Unable to delete the temp file!" + Environment.NewLine + "Please do so yourself: " + file);
+		//		}
 
 		// Process the wit.ai response
 		try
@@ -118,8 +139,8 @@ public class HttpConnectToServer : MonoBehaviour {
 		string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
 		print ("Destination: " + destJson);
 
-//		string originJson = N["origin"].Value;
-//		print ("Origin: " + originJson);
+		//		string originJson = N["origin"].Value;
+		//		print ("Origin: " + originJson);
 
 		// Find the objects that were specified
 		FindObjects (subjJson, destJson);
