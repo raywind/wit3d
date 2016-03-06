@@ -47,7 +47,9 @@ public class HttpConnectToServer : MonoBehaviour {
 			token = "NJP2HHQXIUK3IGW53WXL65NRD74GGJ5B";
 
 			//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
-			print(GetJSONText("sample.wav"));
+			string witAiResponse = GetJSONText("sample.wav");
+			print (witAiResponse);
+			DoParse (witAiResponse);
 		}
 
 
@@ -102,24 +104,6 @@ public class HttpConnectToServer : MonoBehaviour {
 			return "Error: " + ex.Message;
 			return "HTTP ERROR";
 		}       
-
-		// string authString = "Bearer " + token;
-		// wr = UnityWebRequest.Get(url);
-		// wr.SetRequestHeader ("Authorization", authString);
-		// yield return wr.Send ();
-
-//		if(wr.isError) {
-//			print(wr.error);
-//			print ("ERROR!");
-//		}
-//		else {
-//			// Show results as text
-//			print(wr.downloadHandler.text);
-//			// DoParse (wr.downloadHandler.text);
-//
-//			// Or retrieve results as binary data
-//			// byte[] results = wr.downloadHandler.data;
-//		}
 	}
 
 	void DoParse(string textToParse){
@@ -128,14 +112,14 @@ public class HttpConnectToServer : MonoBehaviour {
 		var N = JSON.Parse (textToParse);
 		print ("SimpleJSON: " + N.ToString());
 
-		string subjJson = N["subject"].Value;
+		string subjJson = N["outcomes"][0]["entities"]["subject"][0]["value"].Value.ToLower();
 		print ("Subject: " + subjJson);
 
-		string destJson = N["destination"].Value;
+		string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
 		print ("Destination: " + destJson);
 
-		string originJson = N["origin"].Value;
-		print ("Origin: " + originJson);
+//		string originJson = N["origin"].Value;
+//		print ("Origin: " + originJson);
 
 		// Find the objects that were specified
 		FindObjects (subjJson, destJson);
