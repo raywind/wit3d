@@ -36,6 +36,11 @@ public class AudioToHttp : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		// If you are a Windows user and receiving a Tlserror
+		// See: https://github.com/afauch/wit3d/issues/2
+		// Uncomment the line below to bypass SSL
+		// System.Net.ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => { return true; };
+
 		// set samplerate to 16000 for wit.ai
 		samplerate = 16000;
 
@@ -92,16 +97,6 @@ public class AudioToHttp : MonoBehaviour {
 		request.ContentType = "audio/wav";
 		request.ContentLength = BA_AudioFile.Length;
 		request.GetRequestStream ().Write (BA_AudioFile, 0, BA_AudioFile.Length);
-
-		//		// Delete the temp file
-		//		try
-		//		{
-		//			File.Delete(file);
-		//		}
-		//		catch
-		//		{
-		//			print("Unable to delete the temp file!" + Environment.NewLine + "Please do so yourself: " + file);
-		//		}
 
 		// Process the wit.ai response
 		try
@@ -166,7 +161,7 @@ public class AudioToHttp : MonoBehaviour {
 				string subjectLocDebug = subject.transform.localPosition.ToString ();
 				print ("SubjectLoc: " + subjectLoc);
 
-				Vector3 destLoc = destination.transform.localPosition + new Vector3 (0.0f, yOffset, 0.0f);
+				Vector3 destLoc = destination.transform.localPosition + new Vector3 (0.0f, (destination.transform.lossyScale.y/2), 0.0f);
 				string destLocDebug = destination.transform.localPosition.ToString ();
 
 				// Now move the object
