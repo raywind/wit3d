@@ -2,6 +2,9 @@
 
 Proof-of-concept Unity application using arbitrary voice commands to control the placement of objects on the screen.
 
+Copyright (c) 2016 Aaron Faucher
+MIT License
+
 ## Usage
 
 1. Download and open the Unity project folder.
