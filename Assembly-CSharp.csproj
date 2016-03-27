@@ -46,8 +46,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\JSON Tests\CSharp\Test_CSharp.cs" />
-     <Compile Include="Assets\UserScripts\AudioToHttp.cs" />
+     <Compile Include="Assets\Reference.cs" />
      <Compile Include="Assets\UserScripts\SavWav.cs" />
+     <Compile Include="Assets\UserScripts\Wit3D.cs" />
+     <Compile Include="Assets\UserScripts\_CreateObject.cs" />
+     <Compile Include="Assets\UserScripts\_GenericFindObjects.cs" />
+     <Compile Include="Assets\UserScripts\_Handle.cs" />
+     <Compile Include="Assets\UserScripts\_MoveObject.cs" />
      <None Include="Assets\JSON Tests\TroubleShoot.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

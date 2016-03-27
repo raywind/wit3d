@@ -1,4 +1,29 @@
-﻿using UnityEngine;
+﻿/***********************************************************************************
+MIT License
+
+Copyright (c) 2016 Aaron Faucher
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+
+***********************************************************************************/
+
+using UnityEngine;
 using UnityEngine.Experimental.Networking;
 using System.Collections;
 using SimpleJSON;
@@ -11,7 +36,7 @@ using System.Net;
 using System.Text;
 // using System.Web;
 
-public class AudioToHttp : MonoBehaviour {
+public partial class Wit3D : MonoBehaviour {
 
 	// Class Variables
 
@@ -24,14 +49,12 @@ public class AudioToHttp : MonoBehaviour {
 	string token;
 	UnityWebRequest wr;
 
-	// GameObjects to hold the results of the Wit sentence
-	GameObject subject;
-	GameObject destination;
-
-	// Public movement paramaters
-	public float yOffset;
+	// Movement variables
 	public float moveTime;
+	public float yOffset;
 
+	// GameObject to use as a default spawn point
+	public GameObject spawnPoint;
 
 	// Use this for initialization
 	void Start () {
@@ -74,7 +97,7 @@ public class AudioToHttp : MonoBehaviour {
 			//Start a coroutine called "WaitForRequest" with that WWW variable passed in as an argument
 			string witAiResponse = GetJSONText("Assets/sample.wav");
 			print (witAiResponse);
-			DoParse (witAiResponse);
+			Handle (witAiResponse);
 		}
 
 
@@ -120,76 +143,5 @@ public class AudioToHttp : MonoBehaviour {
 			return "HTTP ERROR";
 		}       
 	}
-
-	void DoParse(string textToParse){
-
-		print (textToParse);
-		var N = JSON.Parse (textToParse);
-		print ("SimpleJSON: " + N.ToString());
-
-		string subjJson = N["outcomes"][0]["entities"]["subject"][0]["value"].Value.ToLower();
-		print ("Subject: " + subjJson);
-
-		string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
-		print ("Destination: " + destJson);
-
-		//		string originJson = N["origin"].Value;
-		//		print ("Origin: " + originJson);
-
-		// Find the objects that were specified
-		FindObjects (subjJson, destJson);
-
-	}
-
-	void FindObjects(string subjName, string destName) {
-
-		if (subjName == "" || destName == "") {
-
-			print ("Didn't understand you, try again.");
-
-		} else {
-
-			print ("FindObjects subject: " + subjName);
-			print ("FindObjects destination: " + destName);
-
-			if (GameObject.Find (subjName) != null && GameObject.Find (destName) != null) {
-
-				subject = GameObject.Find (subjName);
-				destination = GameObject.Find (destName);
-
-				Vector3 subjectLoc = subject.transform.localPosition;
-				string subjectLocDebug = subject.transform.localPosition.ToString ();
-				print ("SubjectLoc: " + subjectLoc);
-
-				Vector3 destLoc = destination.transform.localPosition + new Vector3 (0.0f, (destination.transform.lossyScale.y/2), 0.0f);
-				string destLocDebug = destination.transform.localPosition.ToString ();
-
-				// Now move the object
-				// MoveObject ();
-				StartCoroutine (MoveToPosition (destLoc, moveTime));
-			
-			} else {
-
-				print("Either " + subjName + " or " + destName + " is confusing me.");
-
-			}
-
-		}
-
-	}
-
-	IEnumerator MoveToPosition(Vector3 newPosition, float time)
-	{
-		float elapsedTime = 0;
-		Vector3 startingPos = subject.transform.position;
-		while (elapsedTime < time)
-		{
-			print ("moving!");
-			subject.transform.position = Vector3.Lerp(startingPos, newPosition, (elapsedTime / time));
-			elapsedTime += Time.deltaTime;
-			yield return null;
-		}
-	}
-
 
 }
