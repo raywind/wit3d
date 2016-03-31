@@ -5,6 +5,11 @@ Proof-of-concept Unity application using arbitrary voice commands to control the
 Copyright (c) 2016 Aaron Faucher
 MIT License
 
+## Demo
+
+View a demo of Wit3D in action here:
+https://www.youtube.com/watch?v=QRx37mivPiQ
+
 ## Usage
 
 1. Download and open the Unity project folder.
