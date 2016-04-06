@@ -10,6 +10,9 @@ MIT License
 View a demo of Wit3D in action here:
 https://www.youtube.com/watch?v=QRx37mivPiQ
 
+Augmented reality proof-of-concept demonstration:
+https://www.youtube.com/watch?v=34RkapT_IXQ
+
 ## Usage
 
 1. Download and open the Unity project folder.
