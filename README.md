@@ -5,6 +5,9 @@ Proof-of-concept Unity application using arbitrary voice commands to control the
 Copyright (c) 2016 Aaron Faucher
 MIT License
 
+## NOTE
+Wit.ai has received a major overhaul since Facebook Messenger's bot release earlier this year. Currently, the Wit3D uses the legacy format of intents and entities. I will be working in the coming months to reformat Wit3D to work with stories and actions. Sorry for the inconvenience, and stay tuned! 
+
 ## Demo
 
 View a demo of Wit3D in action here:
