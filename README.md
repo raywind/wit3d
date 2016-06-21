@@ -6,7 +6,7 @@ Copyright (c) 2016 Aaron Faucher
 MIT License
 
 ## NOTE
-Wit.ai has received a major overhaul since Facebook Messenger's bot release earlier this year. Currently, the Wit3D uses the legacy format of intents and entities. I will be working in the coming months to reformat Wit3D to work with stories and actions. Sorry for the inconvenience, and stay tuned! 
+Wit.ai has received a major overhaul since Facebook Messenger's bot release earlier this year. Currently, Wit3D uses the legacy API response format, in which JSON responses are parsed into `intents` and `entities`. I will be working in the coming months to reformat Wit3D to work with `stories` and `actions`, the new Wit.ai features. Until then, unless you have a pre-existing Wit.ai app using the legacy reponse format, Wit3D won't work for you. Sorry for the inconvenience, and stay tuned!
 
 ## Demo
 
