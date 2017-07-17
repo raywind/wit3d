@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SimpleJSON;
+using System.Text.RegularExpressions;
 
 public partial class Wit3D : MonoBehaviour {
 
@@ -13,16 +14,21 @@ public partial class Wit3D : MonoBehaviour {
 		var N = JSON.Parse (textToParse);
 
 		// Find the subject
-		string subjJson = N["outcomes"][0]["entities"]["subject"][0]["value"].Value.ToLower();
-		print ("Subject: " + subjJson);
+		//string subjJson = N["outcomes"][0]["entities"]["subject"][0]["value"].Value.ToLower();
+        string subjJson = N["entities"]["subject"][0]["value"].Value.ToLower();
 
-		// Find the destination
-		string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
-		print ("Destination: " + destJson);
+        print("Subject: " + subjJson);
 
-		// Find the objects
-		GameObject subject = GameObject.Find(subjJson);
-		GameObject destination = GameObject.Find(destJson);
+        // Find the destination
+        //string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
+        string destJson = N["entities"]["destination"][0]["value"].Value.ToLower();
+        print("Destination: " + destJson);
+
+        // Find the objects
+        string s = Regex.Replace(subjJson, @"\s+", " ").Trim();
+        GameObject subject = GameObject.Find(s);
+        s = Regex.Replace(destJson, @"\s+", " ").Trim();
+        GameObject destination = GameObject.Find(s);
 
 		// Find object's positions
 		Vector3 subjectLoc = subject.transform.localPosition;
@@ -34,8 +40,7 @@ public partial class Wit3D : MonoBehaviour {
 
 		// Now move the object
 		StartCoroutine (MoveToPosition (subject, destLoc, moveTime));
-
-	}
+    }
 
 	// Coroutine: Move an object from one position to another
 	IEnumerator MoveToPosition(GameObject subject, Vector3 newPosition, float time)

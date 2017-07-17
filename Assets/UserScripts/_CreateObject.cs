@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SimpleJSON;
+using System.Text.RegularExpressions;
 
 public partial class Wit3D : MonoBehaviour {
 
@@ -13,15 +14,24 @@ public partial class Wit3D : MonoBehaviour {
 		var N = JSON.Parse (textToParse);
 
 		// Find the entities: subject, destination, and new_name
-		string subjJson = N["outcomes"][0]["entities"]["subject"][0]["value"].Value.ToLower();
-		string newNameJson = N["outcomes"][0]["entities"]["new_name"][0]["value"].Value.ToLower();
-		string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
-		int qtyJson = N ["outcomes"] [0] ["entities"] ["number"] [0] ["value"].AsInt;
+		//string subjJson = N["outcomes"][0]["entities"]["subject"][0]["value"].Value.ToLower();
+		//string newNameJson = N["outcomes"][0]["entities"]["new_name"][0]["value"].Value.ToLower();
+		//string destJson = N["outcomes"][0]["entities"]["destination"][0]["value"].Value.ToLower();
+		//int qtyJson = N ["outcomes"] [0] ["entities"] ["number"] [0] ["value"].AsInt;
 
-		// State machine:
 
-		// All should have at least a subject
-		GameObject subject = GameObject.Find(subjJson);
+        string subjJson = N["entities"]["subject"][0]["value"].Value.ToLower();
+        string newNameJson="";// = N["entities"]["new_name"][0]["value"].Value.ToLower();
+        string destJson = N["entities"]["destination"][0]["value"].Value.ToLower();
+        int qtyJson = N["entities"]["number"][0]["value"].AsInt;
+
+
+        // State machine:
+
+        // All should have at least a subject
+        string s = Regex.Replace(subjJson, @"\s+", " ").Trim();
+
+        GameObject subject = GameObject.Find(s);
 
 		if (qtyJson == 0 || qtyJson == null) {
 
@@ -43,8 +53,8 @@ public partial class Wit3D : MonoBehaviour {
 			StartCoroutine(CreateObject (subject, spawnPoint, newNameJson, qtyJson));
 
 		} else {
-
-			GameObject destination = GameObject.Find (destJson);
+            s = Regex.Replace(destJson, @"\s+", " ").Trim();
+            GameObject destination = GameObject.Find (s);
 			print ("Destination: " + destJson);
 
 			StartCoroutine(CreateObject (subject, destination, newNameJson, qtyJson));
